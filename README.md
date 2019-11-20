@@ -6,7 +6,7 @@
 - opencv 4.1.2
 - GNU Make 4.1
 
-## run mathod
+## run method
 ```bash
 cd build
 cmake ..
