@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( cv_test )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+aux_source_directory(. DIR_SRCS)
+add_executable( cv_test ${DIR_SRCS} )
+target_link_libraries( cv_test ${OpenCV_LIBS} )
