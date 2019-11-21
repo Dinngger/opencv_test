@@ -39,13 +39,13 @@ void Detector::detect(Mat img)
 
         // Standard Hough Line Transform
         vector<Vec2f> lines; // will hold the results of the detection
-        HoughLines(drawing, lines, 1.5, 1.5*CV_PI/180, 100); // runs the actual detection
-        int lines_num=1;
+        HoughLines(drawing, lines, 1, 0.2*CV_PI/180, 55); // runs the actual detection
+        int lines_num=0;
         vector<Vec2f> real_lines;
         for (int i=0; i<lines.size(); i++) {
             bool real = true;
             for (int j=0; j<real_lines.size(); j++) {
-                if (vec2f_distance(lines[i], real_lines[j]) < 20) {
+                if (vec2f_distance(lines[i], real_lines[j]) < 15) {
                     real = false;
                     break;
                 }
@@ -56,7 +56,22 @@ void Detector::detect(Mat img)
             }
         }
 
-        if (lines_num - 1 == 3) {
+        // Draw the lines
+        
+        for( size_t i = 0; i < lines.size(); i++ )
+        {
+            float rho = lines[i][0], theta = lines[i][1];
+            Point pt1, pt2;
+            double a = cos(theta), b = sin(theta);
+            double x0 = a*rho, y0 = b*rho;
+            pt1.x = cvRound(x0 + 1000*(-b));
+            pt1.y = cvRound(y0 + 1000*(a));
+            pt2.x = cvRound(x0 - 1000*(-b));
+            pt2.y = cvRound(y0 - 1000*(a));
+            line(drawing, pt1, pt2, Scalar(100), 1, LINE_AA);
+        }
+
+        if (lines_num == 3) {
             x = left_top.x;
             y = left_top.y;
         }
@@ -66,6 +81,8 @@ void Detector::detect(Mat img)
         circle(img, Point(x, y), 2, Scalar(255, 255, 255));
         getline(ss, s[i]);
         lines_n[i] = lines_num;
+        imshow("drawing", drawing);
+        waitKey(0);
     }
     imshow("img", img);
     int lines_n_sorted[contours.size()];

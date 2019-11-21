@@ -1,4 +1,5 @@
 #include "gen_and_detector.hpp"
+#include <time.h>
 
 using namespace cv;
 using namespace std;
@@ -7,7 +8,7 @@ int main(int argc, char **argv)
 {
     unsigned int rng_init;
     if (argc < 2) {
-        rng_init = 0xffffffff;
+        rng_init = 0xffffffff & time(NULL);
     } else {
         stringstream ss;
         ss << argv[1];
